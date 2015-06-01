@@ -37,10 +37,8 @@ public class LSCPspacesuits extends JavaPlugin implements Listener {
 						g.getInventory().setHelmet(null);
 					}
 				}
-
 			}
 		}
-
 	};
 
 	Runnable flyInSpace = new Runnable(){
@@ -55,7 +53,6 @@ public class LSCPspacesuits extends JavaPlugin implements Listener {
 				}
 			}
 		}
-
 	};
 
 	Runnable tpzones = new Runnable(){
@@ -85,14 +82,10 @@ public class LSCPspacesuits extends JavaPlugin implements Listener {
 							p.setHealth(0);
 						}
 					}catch(IllegalArgumentException e){
-
 					}
-
 				}
-
 			}
 		}
-
 	};
 
 	public void onEnable(){
@@ -118,14 +111,11 @@ public class LSCPspacesuits extends JavaPlugin implements Listener {
 		sch.scheduleSyncRepeatingTask(this, spacehurt, 0L, 5L);
 		sch.scheduleSyncRepeatingTask(this, tpzones, 0L, 5L);
 		sch.scheduleSyncRepeatingTask(this, flyInSpace, 0L, 2L);
-
 	}
-
+	
 	public void onDisable(){
 		loadIntoVars();
 	}
-
-
 
 	public void loadIntoVars(){
 		for(String s : spaceSpawnPoints.keySet()){
