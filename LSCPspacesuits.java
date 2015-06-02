@@ -28,6 +28,11 @@ public class LSCPspacesuits extends JavaPlugin implements Listener {
 				getConfig().get("planets." + s.getName() + ".entry.x"),
 				getConfig().get("planets." + s.getName() + ".entry.y"),
 				getConfig().get("planets." + s.getName() + ".entry.z"));
+			planets.get(s.getName()).setExit(new Location(Bukkit.getWorld(getConfig().get("planets." + s.getName() + ".world"),
+				getConfig().get("planets." + s.getName() + ".exit.x"),
+				getConfig().get("planets." + s.getName() + ".exit.y"),
+				getConfig().get("planets." + s.getName() + ".exit.z"));
+			
 		}
 		CreationExecutor exec = new CreationExecutor(this);
 		getCommand("pin1").setExecutor(exec);
