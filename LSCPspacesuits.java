@@ -23,6 +23,11 @@ public class LSCPspacesuits extends JavaPlugin implements Listener {
 	public void onEnable(){
 		getServer().getPluginManager().registerEvents(this, this);
 		for(World s : Bukkit.getWorlds()){
+			planets.put(s.getName(),new PlanetHandler());
+			planets.get(s.getName()).setEntry(new Location(Bukkit.getWorld(getConfig().get("planets." + s.getName() + ".world"),
+				getConfig().get("planets." + s.getName() + ".entry.x"),
+				getConfig().get("planets." + s.getName() + ".entry.y"),
+				getConfig().get("planets." + s.getName() + ".entry.z"));
 		}
 		CreationExecutor exec = new CreationExecutor(this);
 		getCommand("pin1").setExecutor(exec);
