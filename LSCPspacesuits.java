@@ -41,6 +41,7 @@ public class LSCPspacesuits extends JavaPlugin implements Listener {
 
 	public void onDisable(){
 		for(String x : planets.keySet()){
+			getConfig().set("planets." + x + ".world",planets.get(x).getEntry().getWorld().getName());
 			getConfig().set("planets." + x + ".oxygenated",planets.get(x).isOxygenated());
 			getConfig().set("planets." + x + ".exit.x",planets.get(x).getExit().getX());
 			getConfig().set("planets." + x + ".exit.y",planets.get(x).getExit().getY());
