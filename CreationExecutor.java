@@ -7,68 +7,64 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public class CreationExecutor implements CommandExecutor {
-	
+
 	private Plugin plug;
 
 	public CreationExecutor(Plugin t){
 		plug = t;
 	}
+
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 		if(cmd.getName().equalsIgnoreCase("setenterpoint")){
 			if(sender instanceof Player){
 				Player x = (Player) sender;
 				switch(args.length){
-				case 1:
-					LSCPspacesuits.spaceSpawnPoints.put(args[0], x.getLocation());
+				case 0:
+					if(LSCPspacesuits.playerSelections.get(x.getName()) == null){
+						LSCPspacesuits.playerSelections.put(x.getName(), new PlayerSelections());
+					}
+					LSCPspacesuits.playerSelections.get(x.getName()).setEntry(x.getLocation());
+					x.sendMessage("Entry point set.");
 					break;
 				default:
 					return false;
 				}
-
 			}
 		}
+		
 		else if(cmd.getName().equalsIgnoreCase("pin1")){
 			if(sender instanceof Player){
 				Player x = (Player) sender;
 
 				switch(args.length){
 				case 0:
-					LSCPspacesuits.pin1s.put(x.getName(), x.getLocation());
+					if(LSCPspacesuits.playerSelections.get(x.getName()) == null){
+						LSCPspacesuits.playerSelections.put(x.getName(), new PlayerSelections());
+					}
+					LSCPspacesuits.playerSelections.get(x.getName()).setPin1(x.getLocation());
 					x.sendMessage("Pin 1 set.");
 					break;
 				default:
 					return false;
 				}
-
 			}
 		}
+		
 		else if(cmd.getName().equalsIgnoreCase("pin2")){
 			if(sender instanceof Player){
 				Player x = (Player) sender;
 				switch(args.length){
 				case 0:
-					LSCPspacesuits.pin2s.put(x.getName(), x.getLocation());
+					if(LSCPspacesuits.playerSelections.get(x.getName()) == null){
+						LSCPspacesuits.playerSelections.put(x.getName(), new PlayerSelections());
+					}
+					LSCPspacesuits.playerSelections.get(x.getName()).setPin2(x.getLocation());
 					x.sendMessage("Pin 2 set.");
 					break;
 				default:
 					return false;
 				}
-
-			}
-		}
-		else if(cmd.getName().equalsIgnoreCase("setzone")){
-			if(sender instanceof Player){
-				Player x = (Player) sender;
-				switch(args.length){
-				case 1:
-					x.sendMessage("Zone for " + args[0] + " set.");
-					LSCPspacesuits.bounds.put(args[0],new PortalAABB(LSCPspacesuits.pin1s.get(x.getName()), LSCPspacesuits.pin2s.get(x.getName()), args[0]));
-					break;
-				default:
-					return false;
-				}
-
 			}
 		}
 
@@ -76,19 +72,42 @@ public class CreationExecutor implements CommandExecutor {
 			if(sender instanceof Player){
 				Player x = (Player) sender;
 				switch(args.length){
-				case 1:
+				case 0:
+					if(LSCPspacesuits.playerSelections.get(x.getName()) == null){
+						LSCPspacesuits.playerSelections.put(x.getName(), new PlayerSelections());
+					}
 					x.sendMessage("Exit point set.");
-					LSCPspacesuits.spaceEntryPoints.put(args[0], x.getLocation());
+					LSCPspacesuits.playerSelections.get(x.getName()).setExit(x.getLocation());
 					break;
 				default:
 					return false;
 				}
-
 			}
 		}
 
+		else if(cmd.getName().equalsIgnoreCase("createplanet")){
+			if(sender instanceof Player){
+				Player x = (Player) sender;
+				switch(args.length){
+				case 2:
+					LSCPspacesuits.planets.put(args[0], new PlanetHandler(
+							new AABB(
+									LSCPspacesuits.playerSelections.get(x.getName()).pin1,
+									LSCPspacesuits.playerSelections.get(x.getName()).pin2 
+									),
+							LSCPspacesuits.playerSelections.get(x.getName()).entrypoint,
+							LSCPspacesuits.playerSelections.get(x.getName()).exitpoint,
+							Boolean.parseBoolean(args[1])));
+					x.sendMessage("Planet created.");
+					break;
+				default:
+					return false;
+				}
+			}
+		}
 		return true;
 
+		
 	}
-	
+
 }
