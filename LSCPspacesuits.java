@@ -23,15 +23,34 @@ public class LSCPspacesuits extends JavaPlugin implements Listener {
 	public void onEnable(){
 		getServer().getPluginManager().registerEvents(this, this);
 		for(World s : Bukkit.getWorlds()){
-			planets.put(s.getName(),new PlanetHandler());
-			planets.get(s.getName()).setEntry(new Location(Bukkit.getWorld(getConfig().get("planets." + s.getName() + ".world"),
-				getConfig().get("planets." + s.getName() + ".entry.x"),
-				getConfig().get("planets." + s.getName() + ".entry.y"),
-				getConfig().get("planets." + s.getName() + ".entry.z"));
-			planets.get(s.getName()).setExit(new Location(Bukkit.getWorld(getConfig().get("planets." + s.getName() + ".world"),
-				getConfig().get("planets." + s.getName() + ".exit.x"),
-				getConfig().get("planets." + s.getName() + ".exit.y"),
-				getConfig().get("planets." + s.getName() + ".exit.z"));
+			planets.put(s.getName(),new PlanetHandler(
+				
+			new AABB(
+				new Location(
+					Bukkit.getWorld("space"),
+					getConfig().getDouble("planets." + s.getName() + ".portal.min.x"),
+					getConfig().getDouble("planets." + s.getName() + ".portal.min.y"),
+					getConfig().getDouble("planets." + s.getName() + ".portal.min.z"))
+				new Location(
+					Bukkit.getWorld("space"),
+					getConfig().getDouble("planets." + s.getName() + ".portal.max.x"),
+					getConfig().getDouble("planets." + s.getName() + ".portal.max.y"),
+					getConfig().getDouble("planets." + s.getName() + ".portal.max.z"))
+				),
+					
+				new Location(
+					Bukkit.getWorld(getConfig().get("planets." + s.getName() + ".world")),
+					getConfig().getDouble("planets." + s.getName() + ".entry.x"),
+					getConfig().getDouble("planets." + s.getName() + ".entry.y"),
+					getConfig().getDouble("planets." + s.getName() + ".entry.z")),
+					
+				new Location(
+					Bukkit.getWorld(getConfig().get("planets." + s.getName() + ".world")),
+					getConfig().getDouble("planets." + s.getName() + ".exit.x"),
+					getConfig().getDouble("planets." + s.getName() + ".exit.y"),
+					getConfig().getDouble("planets." + s.getName() + ".exit.z")),
+					getConfig().getBoolean("planets." + s.getName() + ".oxygenated")
+					);
 			
 		}
 		CreationExecutor exec = new CreationExecutor(this);
