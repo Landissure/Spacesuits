@@ -23,37 +23,38 @@ public class LSCPspacesuits extends JavaPlugin implements Listener {
 	public void onEnable(){
 		getServer().getPluginManager().registerEvents(this, this);
 		for(World s : Bukkit.getWorlds()){
+			if(getConfig().contains("planets." + s.getName())){
 			planets.put(s.getName(),new PlanetHandler(
-				
 			new AABB(
 				new Location(
 					Bukkit.getWorld("space"),
 					getConfig().getDouble("planets." + s.getName() + ".portal.min.x"),
 					getConfig().getDouble("planets." + s.getName() + ".portal.min.y"),
-					getConfig().getDouble("planets." + s.getName() + ".portal.min.z"))
+					getConfig().getDouble("planets." + s.getName() + ".portal.min.z")
+					),
 				new Location(
 					Bukkit.getWorld("space"),
 					getConfig().getDouble("planets." + s.getName() + ".portal.max.x"),
 					getConfig().getDouble("planets." + s.getName() + ".portal.max.y"),
-					getConfig().getDouble("planets." + s.getName() + ".portal.max.z"))
-				),
+					getConfig().getDouble("planets." + s.getName() + ".portal.max.z")
+					)),
 					
 				new Location(
-					Bukkit.getWorld(getConfig().get("planets." + s.getName() + ".world")),
+					Bukkit.getWorld(getConfig().getString("planets." + s.getName() + ".world")),
 					getConfig().getDouble("planets." + s.getName() + ".entry.x"),
 					getConfig().getDouble("planets." + s.getName() + ".entry.y"),
 					getConfig().getDouble("planets." + s.getName() + ".entry.z")),
 					
 				new Location(
-					Bukkit.getWorld(getConfig().get("planets." + s.getName() + ".world")),
+					Bukkit.getWorld("space"),
 					getConfig().getDouble("planets." + s.getName() + ".exit.x"),
 					getConfig().getDouble("planets." + s.getName() + ".exit.y"),
 					getConfig().getDouble("planets." + s.getName() + ".exit.z")),
-					getConfig().getBoolean("planets." + s.getName() + ".oxygenated")
-					);
+			getConfig().getBoolean("planets." + s.getName() + ".oxygenated")));
+			}
 			
 		}
-		CreationExecutor exec = new CreationExecutor(this);
+		CreationExecutor exec = new CreationExecutor();
 		getCommand("pin1").setExecutor(exec);
 		getCommand("pin2").setExecutor(exec);
 		getCommand("setenterpoint").setExecutor(exec);
@@ -65,13 +66,14 @@ public class LSCPspacesuits extends JavaPlugin implements Listener {
 		sch.scheduleSyncRepeatingTask(this, SpacesuitsTasks.planetBoundaryActor, 0L, 5L);
 		sch.scheduleSyncRepeatingTask(this, SpacesuitsTasks.spacehurt, 0L, 5L);
 		sch.scheduleSyncRepeatingTask(this, SpacesuitsTasks.armor, 0L, 10L);
+		sch.scheduleSyncRepeatingTask(this, SpacesuitsTasks.checkForAirlock, 0L, 10L);
 
 	}
 
 	public void onDisable(){
 		for(String x : planets.keySet()){
-			getConfig().set("planets." + x + ".world",planets.get(x).getEntry().getWorld().getName());
 			getConfig().set("planets." + x + ".oxygenated",planets.get(x).isOxygenated());
+			getConfig().set("planets." + x + ".world",planets.get(x).getEntry().getWorld().getName());
 			getConfig().set("planets." + x + ".exit.x",planets.get(x).getExit().getX());
 			getConfig().set("planets." + x + ".exit.y",planets.get(x).getExit().getY());
 			getConfig().set("planets." + x + ".exit.z",planets.get(x).getExit().getZ());
